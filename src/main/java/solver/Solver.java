@@ -1,39 +1,25 @@
 package solver;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 public class Solver {
     public static Integer solve(int[] temperatures) {
         int n = temperatures.length;
 
         if (n == 0) return 0;
-        if (n == 1) return temperatures[0];
 
-        List<Integer> positives = new LinkedList<>();
-        List<Integer> negatives = new LinkedList<>();
+        int minPositive = Integer.MAX_VALUE;
+        int maxNegative = Integer.MIN_VALUE;
 
         for (int temperature : temperatures) {
             if (temperature >= 0) {
-                positives.add(temperature);
+                minPositive = Math.min(minPositive, temperature);
             } else {
-                negatives.add(temperature);
+                maxNegative = Math.max(maxNegative, temperature);
             }
         }
 
-        Collections.sort(positives);
-        Collections.sort(negatives);
+        if (maxNegative == Integer.MIN_VALUE) return minPositive;
+        if (minPositive == Integer.MAX_VALUE) return maxNegative;
 
-        if (negatives.isEmpty()) return positives.getFirst();
-        if (positives.isEmpty()) return negatives.getLast();
-
-        int positivesMostLeft = positives.getFirst();
-        int negativesMostRight = negatives.getLast();
-
-        if ((negativesMostRight * -1) == positivesMostLeft) return positivesMostLeft;
-        if ((negativesMostRight * -1) > positivesMostLeft) return positivesMostLeft;
-
-        return negativesMostRight;
+        return (maxNegative * -1) >= minPositive ? minPositive : maxNegative;
     }
 }
